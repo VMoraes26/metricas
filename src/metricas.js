@@ -1,4 +1,5 @@
-export function calcularFPb(tabelas, linhas, produtividade, valorHora) {
+export function calcularFPb(tables, linhas, produtividade, valorHora) {
+    let tabelas = [...tables]
 
     var FPb =
         entrada(tabelas) +
@@ -36,8 +37,7 @@ export function calcularFPb(tabelas, linhas, produtividade, valorHora) {
 
 function entrada(tabelas) {
     //Náo utiliza tabela geral
-    delete tabelas.geral
-
+    //delete tabelas.geral
     let primeira = 0
     let segunda = 0
     let terceira = 0
@@ -46,8 +46,8 @@ function entrada(tabelas) {
     let medio = 0
     let complexo = 0
 
-    for (tabela in tabelas) {
-        let valor = parseInt(tabelas[tabela])
+    tabelas.forEach(tabela => {
+        let valor = parseInt(tabela.value)
 
         if (valor >= 1 && valor <= 4) {
             primeira++
@@ -56,7 +56,7 @@ function entrada(tabelas) {
         } else if (valor >= 16) {
             terceira++
         }
-    }
+    })
 
     if (primeira == 0 || primeira == 1) {
         simples += primeira
@@ -89,8 +89,8 @@ function entrada(tabelas) {
 
 function saida(tabelas) {
     //Utiliza tabela geral
-    let total = Object.values(tabelas).reduce((a, b) => parseInt(a) + parseInt(b))
-    tabelas.geral = total
+    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    tabelas.push({ name: 'geral', value: String(value) })
 
     let primeira = 0
     let segunda = 0
@@ -100,8 +100,8 @@ function saida(tabelas) {
     let medio = 0
     let complexo = 0
 
-    for (tabela in tabelas) {
-        let valor = parseInt(tabelas[tabela])
+    tabelas.forEach(tabela => {
+        let valor = parseInt(tabela.value)
 
         if (valor >= 1 && valor <= 5) {
             primeira++
@@ -110,7 +110,7 @@ function saida(tabelas) {
         } else if (valor >= 20) {
             terceira++
         }
-    }
+    })
 
     if (primeira == 0 || primeira == 1) {
         simples += primeira
@@ -136,7 +136,7 @@ function saida(tabelas) {
         complexo += terceira
     }
 
-    delete tabelas.geral
+    tabelas.pop()
 
     console.log(simples, medio, complexo)
     console.log(simples * 4, medio * 5, complexo * 7)
@@ -145,8 +145,9 @@ function saida(tabelas) {
 
 function consulta(tabelas) {
     //Utiliza tabela geral
-    let total = Object.values(tabelas).reduce((a, b) => parseInt(a) + parseInt(b))
-    tabelas.geral = total
+    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    tabelas.push({ name: 'geral', value: String(value) })
+
 
     let primeira = 0
     let segunda = 0
@@ -156,8 +157,8 @@ function consulta(tabelas) {
     let medio = 0
     let complexo = 0
 
-    for (tabela in tabelas) {
-        let valor = parseInt(tabelas[tabela])
+    tabelas.forEach(tabela => {
+        let valor = parseInt(tabela.value)
 
         if (valor >= 1 && valor <= 4) {
             primeira++
@@ -166,7 +167,7 @@ function consulta(tabelas) {
         } else if (valor >= 16) {
             terceira++
         }
-    }
+    })
 
     if (primeira == 0 || primeira == 1) {
         simples += primeira
@@ -192,7 +193,7 @@ function consulta(tabelas) {
         complexo += terceira
     }
 
-    delete tabelas.geral
+    tabelas.pop()
 
     console.log(simples, medio, complexo)
     console.log(simples * 3, medio * 4, complexo * 6)
@@ -201,7 +202,6 @@ function consulta(tabelas) {
 
 function arquivo(tabelas) {
     //Náo utiliza tabela geral
-    delete tabelas.geral;
 
     let primeira = 0
     let segunda = 0
@@ -211,8 +211,8 @@ function arquivo(tabelas) {
     let medio = 0
     let complexo = 0
 
-    for (tabela in tabelas) {
-        let valor = parseInt(tabelas[tabela])
+    tabelas.forEach(tabela => {
+        let valor = parseInt(tabela.value)
 
         if (valor >= 1 && valor <= 19) {
             primeira++
@@ -221,7 +221,7 @@ function arquivo(tabelas) {
         } else if (valor >= 51) {
             terceira++
         }
-    }
+    })
 
     if (primeira == 1) {
         simples += primeira
@@ -246,8 +246,6 @@ function arquivo(tabelas) {
     } else if (terceira >= 6) {
         complexo += terceira
     }
-
-    delete tabelas.geral
 
     console.log(simples, medio, complexo)
     console.log(simples * 7, medio * 10, complexo * 15)
@@ -256,8 +254,8 @@ function arquivo(tabelas) {
 
 function interfaceOk(tabelas) {
     //Utiliza tabela geral
-    let total = Object.values(tabelas).reduce((a, b) => parseInt(a) + parseInt(b))
-    tabelas.geral = total
+    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    tabelas.push({ name: 'geral', value: String(value) })
 
 
     let primeira = 0
@@ -268,8 +266,8 @@ function interfaceOk(tabelas) {
     let medio = 0
     let complexo = 0
 
-    for (tabela in tabelas) {
-        let valor = parseInt(tabelas[tabela])
+    tabelas.forEach(tabela => {
+        let valor = parseInt(tabela.value)
 
         if (valor >= 1 && valor <= 19) {
             primeira++
@@ -278,7 +276,7 @@ function interfaceOk(tabelas) {
         } else if (valor >= 51) {
             terceira++
         }
-    }
+    })
 
     if (primeira == 1) {
         simples += primeira
@@ -304,7 +302,7 @@ function interfaceOk(tabelas) {
         complexo += terceira
     }
 
-    delete tabelas.geral
+    tabelas.pop()
 
     console.log(simples, medio, complexo)
     console.log(simples * 5, medio * 7, complexo * 10)
