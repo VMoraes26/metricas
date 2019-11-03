@@ -6,13 +6,12 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 
 import styles from './style';
 
-export default function Tabelas({ navigation }) {
+export default function Tabelas() {
   const dispatch = useDispatch()
   const { valorHora, sistema, sistemas, linguagem, linguagens, resultados } = useSelector(state => state)
   const [tabelas, setTabelas] = useState([{ name: 'a', value: '8' }, { name: 'b', value: '6' }, { name: 'c', value: '12' }, { name: 'd', value: '18' }, { name: 'e', value: '4' }, { name: 'f', value: '5' }])
   const [tabelaNome, setTabelaNome] = useState('')
   const [tabelaQtdCampos, setTabelaQtdCampos] = useState('')
-  const [produtividade, setProdutividade] = useState('3300')
 
   function addTable() {
     let name = tabelaNome

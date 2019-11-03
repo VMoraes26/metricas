@@ -180,6 +180,17 @@ export default function metricas(state = INITIAL_STATE, action) {
             return { ...state, prazo: action.value }
         case ACTIONS.PRAZOS:
             return { ...state, ...action.value }
+        case ACTIONS.ADDSISTEMA:
+            return { ...state, sistemas: [...state.sistemas, { ...action.value }] }
+        case ACTIONS.UPDATESISTEMA:
+            state.sistemas.forEach((sistema, key) => {
+                if (sistema.id === action.value.id) {
+                    dispatch({ type: 'SISTEMAS', value: [...sistemas, sistemas[key] = { ...action.value }] })
+                }
+            })
+            return { ...state, sistemas: [...state.sistemas, { ...action.value }] }
+        case ACTIONS.LINGUAGENS:
+            return { ...state, linguagens: action.value }
         default:
             return state
     }
@@ -195,5 +206,6 @@ const ACTIONS = {
     CUSTO: 'CUSTO',
     PRAZO: 'PRAZO',
     PRAZOS: 'PRAZOS',
-    SISTEMAS: 'SISTEMAS',
+    ADDSISTEMA: 'ADDSISTEMA',
+    LINGUAGENS: 'LINGUAGENS',
 }
