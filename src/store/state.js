@@ -16,7 +16,7 @@ const resultados = [
         complexo: {
             ocorrencias: '0',
             complexidade: 'complexo',
-            peso: '5',
+            peso: '6',
             resultado: '0'
         }
     },

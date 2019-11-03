@@ -80,22 +80,29 @@ function entrada(tabelas, resultados) {
         complexo += terceira
     }
 
-    let simplesResultado = simples * BigNumber(resultados[0].simples.peso).toNumber()
-    let medioResultado = medio * BigNumber(resultados[0].medio.peso).toNumber()
-    let complexoResultado = complexo * BigNumber(resultados[0].complexo.peso).toNumber()
+    let index = 0
+    resultados.forEach((resultado, key) => {
+        if (resultado.tabela === 'Entradas') {
+            index = key
+        }
+    });
 
-    resultados[0].simples.ocorrencias = simples
-    resultados[0].medio.ocorrencias = medio
-    resultados[0].complexo.ocorrencias = complexo
-    resultados[0].simples.resultado = simplesResultado
-    resultados[0].medio.resultado = medioResultado
-    resultados[0].complexo.resultado = complexoResultado
+    let simplesResultado = simples * BigNumber(resultados[index].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[index].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[index].complexo.peso).toNumber()
+
+    resultados[index].simples.ocorrencias = simples
+    resultados[index].medio.ocorrencias = medio
+    resultados[index].complexo.ocorrencias = complexo
+    resultados[index].simples.resultado = simplesResultado
+    resultados[index].medio.resultado = medioResultado
+    resultados[index].complexo.resultado = complexoResultado
 
     let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
-function saida(tabelas) {
+function saida(tabelas, resultados) {
     //Utiliza tabela geral
     let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
@@ -146,11 +153,29 @@ function saida(tabelas) {
 
     tabelas.pop()
 
-    let total = (simples * 4 + medio * 5 + complexo * 7)
+    let index = 0
+    resultados.forEach((resultado, key) => {
+        if (resultado.tabela === 'Saídas') {
+            index = key
+        }
+    });
+
+    let simplesResultado = simples * BigNumber(resultados[index].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[index].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[index].complexo.peso).toNumber()
+
+    resultados[index].simples.ocorrencias = simples
+    resultados[index].medio.ocorrencias = medio
+    resultados[index].complexo.ocorrencias = complexo
+    resultados[index].simples.resultado = simplesResultado
+    resultados[index].medio.resultado = medioResultado
+    resultados[index].complexo.resultado = complexoResultado
+
+    let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
-function consulta(tabelas) {
+function consulta(tabelas, resultados) {
     //Utiliza tabela geral
     let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
@@ -202,11 +227,29 @@ function consulta(tabelas) {
 
     tabelas.pop()
 
-    let total = (simples * 3 + medio * 4 + complexo * 6)
+    let index = 0
+    resultados.forEach((resultado, key) => {
+        if (resultado.tabela === 'Consultas') {
+            index = key
+        }
+    });
+
+    let simplesResultado = simples * BigNumber(resultados[index].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[index].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[index].complexo.peso).toNumber()
+
+    resultados[index].simples.ocorrencias = simples
+    resultados[index].medio.ocorrencias = medio
+    resultados[index].complexo.ocorrencias = complexo
+    resultados[index].simples.resultado = simplesResultado
+    resultados[index].medio.resultado = medioResultado
+    resultados[index].complexo.resultado = complexoResultado
+
+    let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
-function arquivo(tabelas) {
+function arquivo(tabelas, resultados) {
     //Náo utiliza tabela geral
 
     let primeira = 0
@@ -253,11 +296,29 @@ function arquivo(tabelas) {
         complexo += terceira
     }
 
-    let total = (simples * 7 + medio * 10 + complexo * 15)
+    let index = 0
+    resultados.forEach((resultado, key) => {
+        if (resultado.tabela === 'Arquivos') {
+            index = key
+        }
+    });
+
+    let simplesResultado = simples * BigNumber(resultados[index].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[index].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[index].complexo.peso).toNumber()
+
+    resultados[index].simples.ocorrencias = simples
+    resultados[index].medio.ocorrencias = medio
+    resultados[index].complexo.ocorrencias = complexo
+    resultados[index].simples.resultado = simplesResultado
+    resultados[index].medio.resultado = medioResultado
+    resultados[index].complexo.resultado = complexoResultado
+
+    let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
-function interfaceOk(tabelas) {
+function interfaceOk(tabelas, resultados) {
     //Utiliza tabela geral
     let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
@@ -309,7 +370,25 @@ function interfaceOk(tabelas) {
 
     tabelas.pop()
 
-    let total = (simples * 5 + medio * 7 + complexo * 10)
+    let index = 0
+    resultados.forEach((resultado, key) => {
+        if (resultado.tabela === 'Interfaces') {
+            index = key
+        }
+    });
+
+    let simplesResultado = simples * BigNumber(resultados[index].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[index].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[index].complexo.peso).toNumber()
+
+    resultados[index].simples.ocorrencias = simples
+    resultados[index].medio.ocorrencias = medio
+    resultados[index].complexo.ocorrencias = complexo
+    resultados[index].simples.resultado = simplesResultado
+    resultados[index].medio.resultado = medioResultado
+    resultados[index].complexo.resultado = complexoResultado
+
+    let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
