@@ -410,7 +410,7 @@ function prazoTotal(prazo) {
     var prazoMinutos = 0
 
     let [meses, dias] = String(prazo).split('.')
-    prazoMeses = BigNumber(meses)
+    prazoMeses = BigNumber(prazo).toNumber()
     if (dias) {
         prazoDias = multiply([22, BigNumber('0.' + dias)])
         prazoDias = cases(prazoDias, 2)
@@ -424,10 +424,12 @@ function prazoTotal(prazo) {
             }
         }
     }
-    prazoMeses = BigNumber(String(prazoMeses).split('.')[0]).toNumber()
-    prazoDias = BigNumber(String(prazoDias).split('.')[0]).toNumber()
-    prazoHoras = BigNumber(String(prazoHoras).split('.')[0]).toNumber()
-    prazoMinutos = BigNumber(String(prazoMinutos).split('.')[0]).toNumber()
+//    prazoMeses = BigNumber(String(prazoMeses).split('.')[0]).toNumber()
+
+    prazoMeses = BigNumber(prazoMeses).toNumber()
+    prazoDias = BigNumber(prazoDias).toNumber()
+    prazoHoras = BigNumber(prazoHoras).toNumber()
+    prazoMinutos = BigNumber(prazoMinutos).toNumber()
     return { prazoMeses, prazoDias, prazoHoras, prazoMinutos }
 }
 
