@@ -1,14 +1,14 @@
 import React from 'react';
-import {Provider}from 'react-redux';
-import store from './src/store/index.js';
+import { Provider } from 'react-redux';
 
-import Tabelas from './src/pages/Tabelas/Tabelas.js'
+import Routes from './src/routes'
+import store from './src/store';
 
 export default function App() {
- 
+
   return (
     <Provider store={store}>
-      <Tabelas/>
+      <Routes />
     </Provider>
   );
 }

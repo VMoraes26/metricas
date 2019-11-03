@@ -1,38 +1,33 @@
-export function calcularFPb(tables, linhas, produtividade, valorHora) {
+import BigNumber from 'bignumber.js'
+
+export function calcularFPb(tables, linhas, produtividade, valorHora, dispatch) {
     let tabelas = [...tables]
 
-    var FPb =
+    var FPb = (
         entrada(tabelas) +
         saida(tabelas) +
         consulta(tabelas) +
         arquivo(tabelas) +
         interfaceOk(tabelas)
-
-    console.log('FPb ' + FPb)
+    )
 
     var FPr = (FPb * 1.35).toFixed(0)
-    console.log('FPr ' + FPr)
+
+    dispatch({ type: 'FPB', value: FPb })
+
+    dispatch({ type: 'FPR', value: FPr })
 
     var linhasDeCodigo = parseInt(linhas)
-    console.log('Linguagem Java ' + linhasDeCodigo)
-
     var produtividadeSistema = parseInt(produtividade)
-    console.log('Tipo de sistema ' + produtividadeSistema)
-
     var valorHora = parseInt(valorHora)
-    console.log('Valor da hora ' + valorHora)
 
-    var resultado = (FPr * linhasDeCodigo) / produtividadeSistema
-    let [inteiro, decimal] = String(resultado).split('.')
-    if (decimal) {
-        resultado = parseFloat(inteiro + '.' + decimal.substring(0, 2))
-    }
+    var prazo = calcularPrazo(FPr, linhasDeCodigo, produtividadeSistema)
 
-    console.log(resultado)
+    dispatch({ type: 'PRAZO', value: prazo })
 
-    custo(resultado, valorHora)
+    dispatch({ type: 'CUSTO', value: calcularCusto(prazo, valorHora) })
 
-    prazo(resultado)
+    dispatch({ type: 'PRAZOS', value: prazoTotal(prazo) })
 }
 
 function entrada(tabelas) {
@@ -82,9 +77,8 @@ function entrada(tabelas) {
         complexo += terceira
     }
 
-    console.log(simples, medio, complexo)
-    console.log(simples * 3, medio * 4, complexo * 6)
-    return (simples * 3 + medio * 4 + complexo * 6)
+    let total = (simples * 3 + medio * 4 + complexo * 6)
+    return total
 }
 
 function saida(tabelas) {
@@ -138,9 +132,8 @@ function saida(tabelas) {
 
     tabelas.pop()
 
-    console.log(simples, medio, complexo)
-    console.log(simples * 4, medio * 5, complexo * 7)
-    return (simples * 4 + medio * 5 + complexo * 7)
+    let total = (simples * 4 + medio * 5 + complexo * 7)
+    return total
 }
 
 function consulta(tabelas) {
@@ -195,9 +188,8 @@ function consulta(tabelas) {
 
     tabelas.pop()
 
-    console.log(simples, medio, complexo)
-    console.log(simples * 3, medio * 4, complexo * 6)
-    return (simples * 3 + medio * 4 + complexo * 6)
+    let total = (simples * 3 + medio * 4 + complexo * 6)
+    return total
 }
 
 function arquivo(tabelas) {
@@ -247,9 +239,8 @@ function arquivo(tabelas) {
         complexo += terceira
     }
 
-    console.log(simples, medio, complexo)
-    console.log(simples * 7, medio * 10, complexo * 15)
-    return (simples * 7 + medio * 10 + complexo * 15)
+    let total = (simples * 7 + medio * 10 + complexo * 15)
+    return total
 }
 
 function interfaceOk(tabelas) {
@@ -304,38 +295,66 @@ function interfaceOk(tabelas) {
 
     tabelas.pop()
 
-    console.log(simples, medio, complexo)
-    console.log(simples * 5, medio * 7, complexo * 10)
-    return (simples * 5 + medio * 7 + complexo * 10)
+    let total = (simples * 5 + medio * 7 + complexo * 10)
+    return total
 }
 
-function custo(resultado, valorHora) {
-    var custo = resultado * 22 * 6 * valorHora
-    console.log(custo.toFixed(2))
+function calcularPrazo(FPr, linhasDeCodigo, produtividadeSistema) {
+    var resultado = divide(multiply([FPr, linhasDeCodigo]), produtividadeSistema)
+    resultado = cases(resultado, 2)
+    return resultado
 }
 
-function prazo(resultado) {
+function calcularCusto(resultado, valorHora) {
+    var custo = multiply([resultado , 22,6 , valorHora])
+    return parseFloat(custo.toFixed(2))
+}
+
+function prazoTotal(resultado) {
     var prazoMeses = 0
     var prazoDias = 0
     var prazoHoras = 0
     var prazoMinutos = 0
 
     let [meses, dias] = String(resultado).split('.')
-    prazoMeses = parseInt(meses)
+    prazoMeses = BigNumber(meses)
     if (dias) {
-        prazoDias = 22 * parseFloat('0.' + dias.substring(0, 2))
+        prazoDias = multiply([22 , BigNumber('0.' + dias)])
+        prazoDias = cases(prazoDias,2)
         let horas = String(prazoDias).split('.')[1]
         if (horas) {
-            prazoHoras = 6 * parseFloat('0.' + horas.substring(0, 2))
+            prazoHoras = multiply([6, BigNumber('0.' + horas)])
+        prazoHoras = cases(prazoHoras,2)
             let minutos = String(prazoHoras).split('.')[1]
             if (minutos) {
-                prazoMinutos = 60 * parseFloat('0.' + minutos.substring(0, 2))
+                prazoMinutos = (60 * BigNumber('0.' + minutos))
             }
         }
     }
+    prazoMeses = String(prazoMeses).split('.')[0]
+    prazoDias = String(prazoDias).split('.')[0]
+    prazoHoras = String(prazoHoras).split('.')[0]
+    prazoMinutos = String(prazoMinutos).split('.')[0]
+    return { prazoMeses, prazoDias, prazoHoras, prazoMinutos }
+}
 
-    console.log(String(prazoMeses).split('.')[0] + " meses")
-    console.log(String(prazoDias).split('.')[0] + " dias")
-    console.log(String(prazoHoras).split('.')[0] + " horas")
-    console.log(String(prazoMinutos).split('.')[0] + " minutos")
+function multiply(numbers) {
+    let result = 1
+    numbers.forEach(number => {
+        result = BigNumber(result).times(number).toNumber()
+    });
+    return result
+}
+
+function divide(a, b) {
+    return BigNumber(a).dividedBy(b).toNumber()
+}
+
+function cases(number, decimalPlaces) {
+    let [integer, decimal] = BigNumber(number).toString().split('.')
+    let result = integer
+    if (decimal) {
+        result += '.' + decimal.substring(0, decimalPlaces)
+    }
+    return BigNumber(result).toNumber()
 }

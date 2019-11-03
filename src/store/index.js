@@ -1,7 +1,7 @@
 import { createStore } from 'redux';
 
-import state from './state';
+import metricas from './state';
 
-const store = createStore(state)
+const store = createStore(metricas)
 
 export default store;
