@@ -1,25 +1,28 @@
 import BigNumber from 'bignumber.js'
 
-export function calcularFPb(tables, linhas, produtividade, valorHora, dispatch) {
-    let tabelas = [...tables]
+export function calcularFPb(tables, linhas, produtividade, valorHora, results, dispatch) {
+    let tabelas = JSON.parse(JSON.stringify(tables));
+    let resultados = JSON.parse(JSON.stringify(results));
 
     var FPb = (
-        entrada(tabelas) +
-        saida(tabelas) +
-        consulta(tabelas) +
-        arquivo(tabelas) +
-        interfaceOk(tabelas)
+        entrada(tabelas, resultados) +
+        saida(tabelas, resultados) +
+        consulta(tabelas, resultados) +
+        arquivo(tabelas, resultados) +
+        interfaceOk(tabelas, resultados)
     )
 
-    var FPr = (FPb * 1.35).toFixed(0)
+    var FPr = multiply([FPb, 1.35]).toFixed(0)
+
+    dispatch({ type: 'RESULTADOS', value: resultados })
 
     dispatch({ type: 'FPB', value: FPb })
 
     dispatch({ type: 'FPR', value: FPr })
 
-    var linhasDeCodigo = parseInt(linhas)
-    var produtividadeSistema = parseInt(produtividade)
-    var valorHora = parseInt(valorHora)
+    var linhasDeCodigo = BigNumber(linhas)
+    var produtividadeSistema = BigNumber(produtividade)
+    var valorHora = BigNumber(valorHora)
 
     var prazo = calcularPrazo(FPr, linhasDeCodigo, produtividadeSistema)
 
@@ -30,9 +33,9 @@ export function calcularFPb(tables, linhas, produtividade, valorHora, dispatch) 
     dispatch({ type: 'PRAZOS', value: prazoTotal(prazo) })
 }
 
-function entrada(tabelas) {
+function entrada(tabelas, resultados) {
     //Náo utiliza tabela geral
-    //delete tabelas.geral
+
     let primeira = 0
     let segunda = 0
     let terceira = 0
@@ -42,7 +45,7 @@ function entrada(tabelas) {
     let complexo = 0
 
     tabelas.forEach(tabela => {
-        let valor = parseInt(tabela.value)
+        let valor = BigNumber(tabela.value)
 
         if (valor >= 1 && valor <= 4) {
             primeira++
@@ -77,13 +80,24 @@ function entrada(tabelas) {
         complexo += terceira
     }
 
-    let total = (simples * 3 + medio * 4 + complexo * 6)
+    let simplesResultado = simples * BigNumber(resultados[0].simples.peso).toNumber()
+    let medioResultado = medio * BigNumber(resultados[0].medio.peso).toNumber()
+    let complexoResultado = complexo * BigNumber(resultados[0].complexo.peso).toNumber()
+
+    resultados[0].simples.ocorrencias = simples
+    resultados[0].medio.ocorrencias = medio
+    resultados[0].complexo.ocorrencias = complexo
+    resultados[0].simples.resultado = simplesResultado
+    resultados[0].medio.resultado = medioResultado
+    resultados[0].complexo.resultado = complexoResultado
+
+    let total = (simplesResultado + medioResultado + complexoResultado)
     return total
 }
 
 function saida(tabelas) {
     //Utiliza tabela geral
-    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
 
     let primeira = 0
@@ -95,7 +109,7 @@ function saida(tabelas) {
     let complexo = 0
 
     tabelas.forEach(tabela => {
-        let valor = parseInt(tabela.value)
+        let valor = BigNumber(tabela.value)
 
         if (valor >= 1 && valor <= 5) {
             primeira++
@@ -138,7 +152,7 @@ function saida(tabelas) {
 
 function consulta(tabelas) {
     //Utiliza tabela geral
-    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
 
 
@@ -151,7 +165,7 @@ function consulta(tabelas) {
     let complexo = 0
 
     tabelas.forEach(tabela => {
-        let valor = parseInt(tabela.value)
+        let valor = BigNumber(tabela.value)
 
         if (valor >= 1 && valor <= 4) {
             primeira++
@@ -204,7 +218,7 @@ function arquivo(tabelas) {
     let complexo = 0
 
     tabelas.forEach(tabela => {
-        let valor = parseInt(tabela.value)
+        let valor = BigNumber(tabela.value)
 
         if (valor >= 1 && valor <= 19) {
             primeira++
@@ -245,7 +259,7 @@ function arquivo(tabelas) {
 
 function interfaceOk(tabelas) {
     //Utiliza tabela geral
-    let { value } = tabelas.reduce((a, b) => ({ value: parseInt(a.value) + parseInt(b.value) }))
+    let { value } = tabelas.reduce((a, b) => ({ value: BigNumber(a.value) + BigNumber(b.value) }))
     tabelas.push({ name: 'geral', value: String(value) })
 
 
@@ -258,7 +272,7 @@ function interfaceOk(tabelas) {
     let complexo = 0
 
     tabelas.forEach(tabela => {
-        let valor = parseInt(tabela.value)
+        let valor = BigNumber(tabela.value)
 
         if (valor >= 1 && valor <= 19) {
             primeira++
@@ -300,41 +314,41 @@ function interfaceOk(tabelas) {
 }
 
 function calcularPrazo(FPr, linhasDeCodigo, produtividadeSistema) {
-    var resultado = divide(multiply([FPr, linhasDeCodigo]), produtividadeSistema)
-    resultado = cases(resultado, 2)
-    return resultado
+    var prazo = divide(multiply([FPr, linhasDeCodigo]), produtividadeSistema)
+    prazo = cases(prazo, 2)
+    return prazo
 }
 
-function calcularCusto(resultado, valorHora) {
-    var custo = multiply([resultado , 22,6 , valorHora])
-    return parseFloat(custo.toFixed(2))
+function calcularCusto(prazo, valorHora) {
+    var custo = multiply([prazo, 22, 6, valorHora])
+    return BigNumber(custo.toFixed(2)).toNumber()
 }
 
-function prazoTotal(resultado) {
+function prazoTotal(prazo) {
     var prazoMeses = 0
     var prazoDias = 0
     var prazoHoras = 0
     var prazoMinutos = 0
 
-    let [meses, dias] = String(resultado).split('.')
+    let [meses, dias] = String(prazo).split('.')
     prazoMeses = BigNumber(meses)
     if (dias) {
-        prazoDias = multiply([22 , BigNumber('0.' + dias)])
-        prazoDias = cases(prazoDias,2)
+        prazoDias = multiply([22, BigNumber('0.' + dias)])
+        prazoDias = cases(prazoDias, 2)
         let horas = String(prazoDias).split('.')[1]
         if (horas) {
             prazoHoras = multiply([6, BigNumber('0.' + horas)])
-        prazoHoras = cases(prazoHoras,2)
+            prazoHoras = cases(prazoHoras, 2)
             let minutos = String(prazoHoras).split('.')[1]
             if (minutos) {
                 prazoMinutos = (60 * BigNumber('0.' + minutos))
             }
         }
     }
-    prazoMeses = String(prazoMeses).split('.')[0]
-    prazoDias = String(prazoDias).split('.')[0]
-    prazoHoras = String(prazoHoras).split('.')[0]
-    prazoMinutos = String(prazoMinutos).split('.')[0]
+    prazoMeses = BigNumber(String(prazoMeses).split('.')[0]).toNumber()
+    prazoDias = BigNumber(String(prazoDias).split('.')[0]).toNumber()
+    prazoHoras = BigNumber(String(prazoHoras).split('.')[0]).toNumber()
+    prazoMinutos = BigNumber(String(prazoMinutos).split('.')[0]).toNumber()
     return { prazoMeses, prazoDias, prazoHoras, prazoMinutos }
 }
 

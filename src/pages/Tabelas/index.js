@@ -8,7 +8,7 @@ import styles from './style';
 
 export default function Tabelas({ navigation }) {
   const dispatch = useDispatch()
-  const { valorHora, sistema, sistemas, linguagem, linguagens } = useSelector(state => state)
+  const { valorHora, sistema, sistemas, linguagem, linguagens, resultados } = useSelector(state => state)
   const [tabelas, setTabelas] = useState([{ name: 'a', value: '8' }, { name: 'b', value: '6' }, { name: 'c', value: '12' }, { name: 'd', value: '18' }, { name: 'e', value: '4' }, { name: 'f', value: '5' }])
   const [tabelaNome, setTabelaNome] = useState('')
   const [tabelaQtdCampos, setTabelaQtdCampos] = useState('')
@@ -23,7 +23,9 @@ export default function Tabelas({ navigation }) {
       setTabelas([...tabelas, { name, value: tabelaQtdCampos }])
       setTabelaNome('')
       setTabelaQtdCampos('')
+      return [...tabelas, { name, value: tabelaQtdCampos }]
     }
+    return tabelas
   }
 
   function removeTable(index) {
@@ -45,7 +47,8 @@ export default function Tabelas({ navigation }) {
   }
 
   async function calcular() {
-    calcularFPb(tabelas, linguagem.value, sistema.value, valorHora, dispatch)
+    let tables = addTable()
+    calcularFPb(tables, linguagem.value, sistema.value, valorHora, resultados, dispatch)
   }
 
   return (

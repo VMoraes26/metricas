@@ -1,3 +1,111 @@
+const resultados = [
+    {
+        tabela: 'Entradas',
+        simples: {
+            ocorrencias: '0',
+            complexidade: 'simples',
+            peso: '3',
+            resultado: '0'
+        },
+        medio: {
+            ocorrencias: '0',
+            complexidade: 'médio',
+            peso: '4',
+            resultado: '0'
+        },
+        complexo: {
+            ocorrencias: '0',
+            complexidade: 'complexo',
+            peso: '5',
+            resultado: '0'
+        }
+    },
+    {
+        tabela: 'Saídas',
+        simples: {
+            ocorrencias: '0',
+            complexidade: 'simples',
+            peso: '4',
+            resultado: '0'
+        },
+        medio: {
+            ocorrencias: '0',
+            complexidade: 'médio',
+            peso: '5',
+            resultado: '0'
+        },
+        complexo: {
+            ocorrencias: '0',
+            complexidade: 'complexo',
+            peso: '7',
+            resultado: '0'
+        }
+    },
+    {
+        tabela: 'Consultas',
+        simples: {
+            ocorrencias: '0',
+            complexidade: 'simples',
+            peso: '3',
+            resultado: '0'
+        },
+        medio: {
+            ocorrencias: '0',
+            complexidade: 'médio',
+            peso: '4',
+            resultado: '0'
+        },
+        complexo: {
+            ocorrencias: '0',
+            complexidade: 'complexo',
+            peso: '6',
+            resultado: '0'
+        }
+    },
+    {
+        tabela: 'Arquivos',
+        simples: {
+            ocorrencias: '0',
+            complexidade: 'simples',
+            peso: '7',
+            resultado: '0'
+        },
+        medio: {
+            ocorrencias: '0',
+            complexidade: 'médio',
+            peso: '10',
+            resultado: '0'
+        },
+        complexo: {
+            ocorrencias: '0',
+            complexidade: 'complexo',
+            peso: '15',
+            resultado: '0'
+        }
+    },
+    {
+        tabela: 'Interfaces',
+        simples: {
+            ocorrencias: '0',
+            complexidade: 'simples',
+            peso: '5',
+            resultado: '0'
+        },
+        medio: {
+            ocorrencias: '0',
+            complexidade: 'médio',
+            peso: '7',
+            resultado: '0'
+        },
+        complexo: {
+            ocorrencias: '0',
+            complexidade: 'complexo',
+            peso: '10',
+            resultado: '0'
+        }
+    },
+]
+
 const INITIAL_STATE = {
     sistemas: [
         {
@@ -49,7 +157,7 @@ const INITIAL_STATE = {
     sistema: { id: 3, name: '', value: '3300' },
     linguagem: { id: 1, name: '', value: '20' },
     valorHora: '25',
-
+    resultados: resultados
 }
 
 export default function metricas(state = INITIAL_STATE, action) {
@@ -60,6 +168,8 @@ export default function metricas(state = INITIAL_STATE, action) {
             return { ...state, linguagem: action.value }
         case ACTIONS.VALORHORA:
             return { ...state, valorHora: action.value }
+        case ACTIONS.RESULTADOS:
+            return { ...state, resultados: action.value }
         case ACTIONS.FPB:
             return { ...state, FPb: action.value }
         case ACTIONS.FPR:
@@ -79,6 +189,7 @@ const ACTIONS = {
     SISTEMA: 'SISTEMA',
     LINGUAGEM: 'LINGUAGEM',
     VALORHORA: 'VALORHORA',
+    RESULTADOS: 'RESULTADOS',
     FPB: 'FPB',
     FPR: 'FPR',
     CUSTO: 'CUSTO',
