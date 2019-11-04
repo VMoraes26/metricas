@@ -19,13 +19,13 @@ export default function Routes() {
       <View style={styles.container}>
         <Tabs>
           <Tab heading={<TabHeading style={styles.tabHeading} ><Icon type="FontAwesome" name="list" /></TabHeading>}>
-            <Configuracoes />
+            <Tabelas />
           </Tab>
           <Tab heading={<TabHeading style={styles.tabHeading} ><Icon type="FontAwesome" name="calculator" /></TabHeading>}>
             <Resultados />
           </Tab>
           <Tab heading={<TabHeading style={styles.tabHeading} ><Icon type="FontAwesome" name="cogs" /></TabHeading>}>
-            <Tabelas />
+            <Configuracoes />
           </Tab>
         </Tabs>
       </View>

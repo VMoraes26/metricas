@@ -420,11 +420,11 @@ function prazoTotal(prazo) {
             prazoHoras = cases(prazoHoras, 2)
             let minutos = String(prazoHoras).split('.')[1]
             if (minutos) {
-                prazoMinutos = (60 * BigNumber('0.' + minutos))
+                prazoMinutos = multiply([60, BigNumber('0.' + minutos)])
             }
         }
     }
-//    prazoMeses = BigNumber(String(prazoMeses).split('.')[0]).toNumber()
+    //    prazoMeses = BigNumber(String(prazoMeses).split('.')[0]).toNumber()
 
     prazoMeses = BigNumber(prazoMeses).toNumber()
     prazoDias = BigNumber(prazoDias).toNumber()

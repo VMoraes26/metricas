@@ -183,14 +183,40 @@ export default function metricas(state = INITIAL_STATE, action) {
         case ACTIONS.ADDSISTEMA:
             return { ...state, sistemas: [...state.sistemas, { ...action.value }] }
         case ACTIONS.UPDATESISTEMA:
-            state.sistemas.forEach((sistema, key) => {
+            let sisToUpdate = JSON.parse(JSON.stringify(state.sistemas));
+            sisToUpdate.forEach((sistema, key) => {
                 if (sistema.id === action.value.id) {
-                    dispatch({ type: 'SISTEMAS', value: [...sistemas, sistemas[key] = { ...action.value }] })
+                    sisToUpdate[key] = action.value
                 }
             })
-            return { ...state, sistemas: [...state.sistemas, { ...action.value }] }
-        case ACTIONS.LINGUAGENS:
-            return { ...state, linguagens: action.value }
+            return { ...state, sistemas: sisToUpdate }
+        case ACTIONS.DELETESISTEMA:
+            let sisToDel = JSON.parse(JSON.stringify(state.sistemas));
+            sisToDel.forEach((sistema, key) => {
+                if (sistema.id === action.value.id) {
+                    sisToDel.splice(key, 1)
+                }
+            })
+            return { ...state, sistemas: sisToDel }
+
+        case ACTIONS.ADDLINGUAGEM:
+            return { ...state, linguagens: [...state.linguagens, { ...action.value }] }
+        case ACTIONS.UPDATELINGUAGEM:
+            let lingToUpdate = JSON.parse(JSON.stringify(state.linguagens));
+            lingToUpdate.forEach((linguagem, key) => {
+                if (linguagem.id === action.value.id) {
+                    lingToUpdate[key] = action.value
+                }
+            })
+            return { ...state, linguagens: lingToUpdate }
+        case ACTIONS.DELETELINGUAGEM:
+            let lingToDel = JSON.parse(JSON.stringify(state.linguagens));
+            lingToDel.forEach((linguagem, key) => {
+                if (linguagem.id === action.value.id) {
+                    lingToDel.splice(key, 1)
+                }
+            })
+            return { ...state, linguagens: lingToDel }
         default:
             return state
     }
@@ -207,5 +233,9 @@ const ACTIONS = {
     PRAZO: 'PRAZO',
     PRAZOS: 'PRAZOS',
     ADDSISTEMA: 'ADDSISTEMA',
-    LINGUAGENS: 'LINGUAGENS',
+    UPDATESISTEMA: 'UPDATESISTEMA',
+    DELETESISTEMA: 'DELETESISTEMA',
+    ADDLINGUAGEM: 'ADDLINGUAGEM',
+    UPDATELINGUAGEM: 'UPDATELINGUAGEM',
+    DELETELINGUAGEM: 'DELETELINGUAGEM',
 }
